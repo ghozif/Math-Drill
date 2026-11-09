@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Setiap user hanya bisa membaca & menambah riwayat miliknya sendiri.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/sessions/{sessionId} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null
+                    && request.auth.uid == uid
+                    && request.resource.data.total is int
+                    && request.resource.data.total <= 5000;
+      allow update: if false;
+    }
+  }
+}
