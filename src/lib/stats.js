@@ -60,16 +60,7 @@ export function formatPct(x) {
   return `${Math.round(x * 100)}%`;
 }
 
-export function formatSec(ms) {
-  return `${(ms / 1000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} dtk`;
-}
-
 export function formatClock(totalSec) {
   const s = Math.max(0, Math.ceil(totalSec));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-}
-
-export function formatDateLabel(key, opts = { weekday: 'short', day: 'numeric', month: 'short' }) {
-  const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('id-ID', opts);
 }

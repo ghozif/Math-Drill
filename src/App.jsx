@@ -8,8 +8,10 @@ import Home from './components/Home';
 import Drill from './components/Drill';
 import Result from './components/Result';
 import History from './components/History';
+import { useI18n } from './components/I18nProvider';
 
 export default function App() {
+  const { t } = useI18n();
   const [user, setUser] = useState(undefined); // undefined = masih cek status login
   const [screen, setScreen] = useState('home'); // home | drill | result | history
   const [settings, setSettings] = useState(loadSettings);
@@ -43,7 +45,7 @@ export default function App() {
     [user],
   );
 
-  if (user === undefined) return <div className="center muted">Memuat…</div>;
+  if (user === undefined) return <div className="center muted">{t('app.loading')}</div>;
   if (!user) return <Login />;
 
   if (screen === 'drill') {
@@ -63,14 +65,14 @@ export default function App() {
         <span className="brand">Math Drill</span>
         <nav className="nav">
           <button type="button" className={screen !== 'history' ? 'active' : ''} onClick={() => setScreen('home')}>
-            Latihan
+            {t('nav.practice')}
           </button>
           <button type="button" className={screen === 'history' ? 'active' : ''} onClick={() => setScreen('history')}>
-            Riwayat
+            {t('nav.history')}
           </button>
         </nav>
         <button type="button" className="icon-btn" onClick={() => signOut(auth)} title={user.email ?? ''}>
-          Keluar
+          {t('nav.signOut')}
         </button>
       </header>
 

@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { MAX_DIGITS, OPS, OP_KEYS, formatProblem, generateProblem, validateSettings } from '../lib/generator';
 import { PRESETS } from '../lib/settings';
+import { useI18n } from './I18nProvider';
+import LanguageSwitch from './LanguageSwitch';
 
 function Stepper({ value, min, max, onChange, label }) {
   return (
@@ -16,9 +18,9 @@ function Stepper({ value, min, max, onChange, label }) {
   );
 }
 
-const timeLabel = (s) => (s < 60 ? `${s} dtk` : `${s / 60} mnt`);
-
 export default function Home({ settings, setSettings, onStart }) {
+  const { t } = useI18n();
+  const timeLabel = (s) => (s < 60 ? t('units.sec', { n: s }) : t('units.min', { n: s / 60 }));
   const errors = validateSettings(settings);
   const update = (patch) => setSettings((s) => ({ ...s, ...patch }));
 
@@ -44,7 +46,7 @@ export default function Home({ settings, setSettings, onStart }) {
   return (
     <div className="container">
       <section className="card">
-        <h2>Operasi</h2>
+        <h2>{t('home.operations')}</h2>
         <div className="chips">
           {OP_KEYS.map((op) => (
             <button
@@ -55,21 +57,21 @@ export default function Home({ settings, setSettings, onStart }) {
               onClick={() => toggleOp(op)}
             >
               <span className="sym">{OPS[op].symbol}</span>
-              {OPS[op].label}
+              {t(`ops.${op}`)}
             </button>
           ))}
         </div>
       </section>
 
       <section className="card">
-        <h2>Jumlah digit</h2>
+        <h2>{t('home.digits')}</h2>
         <div className="row">
-          <span>Angka pertama (X)</span>
-          <Stepper label="Digit X" value={settings.digitsX} min={1} max={MAX_DIGITS} onChange={(v) => update({ digitsX: v })} />
+          <span>{t('home.firstNumber')}</span>
+          <Stepper label={t('home.digitsX')} value={settings.digitsX} min={1} max={MAX_DIGITS} onChange={(v) => update({ digitsX: v })} />
         </div>
         <div className="row">
-          <span>Angka kedua (Y)</span>
-          <Stepper label="Digit Y" value={settings.digitsY} min={1} max={MAX_DIGITS} onChange={(v) => update({ digitsY: v })} />
+          <span>{t('home.secondNumber')}</span>
+          <Stepper label={t('home.digitsY')} value={settings.digitsY} min={1} max={MAX_DIGITS} onChange={(v) => update({ digitsY: v })} />
         </div>
         {samples.length > 0 && (
           <div className="samples">
@@ -81,13 +83,13 @@ export default function Home({ settings, setSettings, onStart }) {
       </section>
 
       <section className="card">
-        <h2>Sesi</h2>
+        <h2>{t('home.session')}</h2>
         <div className="segmented">
           <button type="button" className={settings.mode === 'count' ? 'on' : ''} onClick={() => setMode('count')}>
-            Jumlah soal
+            {t('home.modeCount')}
           </button>
           <button type="button" className={settings.mode === 'time' ? 'on' : ''} onClick={() => setMode('time')}>
-            Waktu
+            {t('home.modeTime')}
           </button>
         </div>
         <div className="chips">
@@ -98,12 +100,12 @@ export default function Home({ settings, setSettings, onStart }) {
               className={`chip ${settings.target === v ? 'on' : ''}`}
               onClick={() => update({ target: v })}
             >
-              {settings.mode === 'time' ? timeLabel(v) : `${v} soal`}
+              {settings.mode === 'time' ? timeLabel(v) : t('count.problems', { n: v })}
             </button>
           ))}
         </div>
         <label className="row custom">
-          <span>{settings.mode === 'time' ? 'Atau isi sendiri (detik)' : 'Atau isi sendiri (soal)'}</span>
+          <span>{settings.mode === 'time' ? t('home.customTime') : t('home.customCount')}</span>
           <input
             type="number"
             inputMode="numeric"
@@ -118,9 +120,9 @@ export default function Home({ settings, setSettings, onStart }) {
       <section className="card">
         <div className="row">
           <span>
-            Keypad angka di layar
+            {t('home.keypad')}
             <br />
-            <span className="muted small">Matikan kalau mau pakai keyboard HP/laptop</span>
+            <span className="muted small">{t('home.keypadHint')}</span>
           </span>
           <label className="switch">
             <input type="checkbox" checked={settings.keypad} onChange={(e) => update({ keypad: e.target.checked })} />
@@ -129,13 +131,18 @@ export default function Home({ settings, setSettings, onStart }) {
         </div>
       </section>
 
+      <section className="card">
+        <h2>{t('language.title')}</h2>
+        <LanguageSwitch />
+      </section>
+
       {errors.map((e) => (
         <p key={e} className="error">
-          {e}
+          {t(e)}
         </p>
       ))}
       <button type="button" className="btn" disabled={errors.length > 0} onClick={onStart}>
-        Mulai latihan
+        {t('home.start')}
       </button>
     </div>
   );

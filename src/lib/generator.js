@@ -5,10 +5,10 @@
 // - Pembagian: hasil selalu bulat (X dibuat dari Y × hasil).
 
 export const OPS = {
-  add: { symbol: '+', label: 'Penjumlahan' },
-  sub: { symbol: '−', label: 'Pengurangan' },
-  mul: { symbol: '×', label: 'Perkalian' },
-  div: { symbol: '÷', label: 'Pembagian' },
+  add: { symbol: '+' },
+  sub: { symbol: '−' },
+  mul: { symbol: '×' },
+  div: { symbol: '÷' },
 };
 
 export const OP_KEYS = Object.keys(OPS);
@@ -24,11 +24,12 @@ function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Mengembalikan kunci pesan di lib/i18n.js, bukan teks jadi.
 export function validateSettings(s) {
   const errors = [];
-  if (!s.ops || s.ops.length === 0) errors.push('Pilih minimal satu operasi.');
+  if (!s.ops || s.ops.length === 0) errors.push('errors.noOps');
   if (s.ops?.includes('div') && s.digitsX < s.digitsY) {
-    errors.push('Untuk pembagian, digit X harus ≥ digit Y supaya hasilnya bisa bulat.');
+    errors.push('errors.divDigits');
   }
   return errors;
 }

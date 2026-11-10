@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { OPS } from '../lib/generator';
 import { loadSessions } from '../lib/sessions';
-import { dateKey, formatDateLabel, formatPct, formatSec, groupByDay } from '../lib/stats';
+import { dateKey, formatPct, groupByDay } from '../lib/stats';
+import { useI18n } from './I18nProvider';
 
 const DAYS_IN_CHART = 14;
 
 export default function History({ uid }) {
+  const { t, formatSec, formatDateLabel, formatDateTime } = useI18n();
   const [state, setState] = useState({ status: 'loading', sessions: [] });
 
   useEffect(() => {
@@ -36,11 +38,9 @@ export default function History({ uid }) {
     return out;
   }, [days]);
 
-  if (state.status === 'loading') return <div className="container muted">Memuat riwayat…</div>;
-  if (state.status === 'error')
-    return <div className="container error">Gagal memuat riwayat. Cek koneksi atau aturan Firestore.</div>;
-  if (!state.sessions.length)
-    return <div className="container muted">Belum ada riwayat. Selesaikan satu sesi latihan dulu.</div>;
+  if (state.status === 'loading') return <div className="container muted">{t('history.loading')}</div>;
+  if (state.status === 'error') return <div className="container error">{t('history.error')}</div>;
+  if (!state.sessions.length) return <div className="container muted">{t('history.empty')}</div>;
 
   const maxTotal = Math.max(1, ...chart.map((c) => c.data?.total ?? 0));
   const today = days.find((d) => d.date === dateKey());
@@ -48,28 +48,36 @@ export default function History({ uid }) {
   return (
     <div className="container">
       <section className="card">
-        <h2>Hari ini</h2>
+        <h2>{t('history.today')}</h2>
         {today ? (
           <div className="stats">
             <div className="stat-box">
-              <span className="muted small">Soal</span>
+              <span className="muted small">{t('table.problems')}</span>
               <b>{today.total}</b>
             </div>
             <div className="stat-box">
-              <span className="muted small">Akurasi</span>
+              <span className="muted small">{t('table.accuracy')}</span>
               <b>{formatPct(today.accuracy)}</b>
             </div>
           </div>
         ) : (
-          <p className="muted">Belum latihan hari ini.</p>
+          <p className="muted">{t('history.noneToday')}</p>
         )}
       </section>
 
       <section className="card">
-        <h2>14 hari terakhir</h2>
-        <div className="chart" role="img" aria-label="Grafik jumlah soal per hari">
+        <h2>{t('history.last14')}</h2>
+        <div className="chart" role="img" aria-label={t('history.chartLabel')}>
           {chart.map((c) => (
-            <div className="bar-col" key={c.key} title={c.data ? `${c.data.total} soal, ${formatPct(c.data.accuracy)}` : 'Tidak latihan'}>
+            <div
+              className="bar-col"
+              key={c.key}
+              title={
+                c.data
+                  ? `${t('count.problems', { n: c.data.total })}, ${formatPct(c.data.accuracy)}`
+                  : t('history.noPractice')
+              }
+            >
               <span className="bar-acc">{c.data ? formatPct(c.data.accuracy) : ''}</span>
               <div
                 className={`bar ${c.data ? '' : 'empty'}`}
@@ -79,18 +87,18 @@ export default function History({ uid }) {
             </div>
           ))}
         </div>
-        <p className="muted small">Tinggi batang = jumlah soal, angka di atas = akurasi.</p>
+        <p className="muted small">{t('history.chartNote')}</p>
       </section>
 
       <section className="card">
-        <h2>Per hari</h2>
+        <h2>{t('history.perDay')}</h2>
         <table>
           <thead>
             <tr>
-              <th>Tanggal</th>
-              <th>Soal</th>
-              <th>Akurasi</th>
-              <th>Rata-rata</th>
+              <th>{t('table.date')}</th>
+              <th>{t('table.problems')}</th>
+              <th>{t('table.accuracy')}</th>
+              <th>{t('table.average')}</th>
             </tr>
           </thead>
           <tbody>
@@ -107,20 +115,13 @@ export default function History({ uid }) {
       </section>
 
       <section className="card">
-        <h2>Sesi terakhir</h2>
+        <h2>{t('history.recent')}</h2>
         {state.sessions.slice(0, 10).map((s) => (
           <div className="miss" key={s.id}>
             <span>
-              {s.ops.map((o) => OPS[o]?.symbol).join(' ')} · {s.digitsX}×{s.digitsY} digit
+              {s.ops.map((o) => OPS[o]?.symbol).join(' ')} · {t('history.digits', { x: s.digitsX, y: s.digitsY })}
               <br />
-              <span className="muted small">
-                {new Date(s.startedAt).toLocaleString('id-ID', {
-                  day: 'numeric',
-                  month: 'short',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </span>
+              <span className="muted small">{formatDateTime(s.startedAt)}</span>
             </span>
             <span className="right">
               {s.correct}/{s.total}
