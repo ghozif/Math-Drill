@@ -1,73 +1,132 @@
 # Math Drill
 
-Web app latihan hitung cepat (+ − × ÷) dengan login dan riwayat harian.
-Stack: React (Vite) + Firebase Auth + Firestore, dibuat sebagai PWA supaya bisa di-install ke home screen iPhone/Android.
+[![Deploy to Firebase Hosting](https://github.com/ghozif/Math-Drill/actions/workflows/deploy.yml/badge.svg)](https://github.com/ghozif/Math-Drill/actions/workflows/deploy.yml)
 
-## Fitur
-- Pilih operasi (boleh campur), jumlah digit X dan Y (1–5 digit)
-- Pengurangan tidak pernah negatif, pembagian selalu bulat
-- Mode sesi: jumlah soal atau waktu
-- Jawaban lanjut otomatis kalau benar; kalau jumlah digit sudah pas tapi salah → dikosongkan, ulangi soal yang sama
-- Akurasi dihitung dari percobaan pertama
-- Keypad angka di layar (bisa dimatikan), keyboard fisik juga bisa
-- Login Google atau email/password, riwayat per hari + grafik 14 hari
+A fast arithmetic practice app for addition, subtraction, multiplication, and division. It runs in the browser, installs on your phone as a PWA, works offline, and tracks your daily progress. Available in English and Indonesian.
 
-## Struktur folder
-```
-src/
-  firebase.js            koneksi Firebase (config dari .env)
-  App.jsx                status login + perpindahan layar
-  lib/generator.js       pembuat soal (aturan tanpa negatif / bagi bulat)
-  lib/stats.js           ringkasan sesi, grup per hari, format angka
-  lib/settings.js        setting default + simpan di localStorage
-  lib/sessions.js        simpan/ambil riwayat di Firestore
-  components/            Login, Home (setting), Drill, Keypad, Result, History
-tests/generator.test.js  uji 174.000 soal acak
-firestore.rules          aturan keamanan database
-```
+**[Try the live app](https://math-drill-b19a9.web.app)**
 
-## Setup (sekali saja)
+<table>
+  <tr>
+    <td><img src="docs/screenshots/home.png" alt="Practice settings screen" width="240"></td>
+    <td><img src="docs/screenshots/drill.png" alt="Drill screen with on-screen keypad" width="240"></td>
+    <td><img src="docs/screenshots/history.png" alt="History screen with a 14-day chart, showing sample data" width="240"></td>
+  </tr>
+</table>
 
-### 1. Buat project Firebase
-1. Buka https://console.firebase.google.com → **Add project** (Google Analytics boleh dimatikan).
-2. Paket **Spark (gratis)** sudah cukup, tidak perlu kartu kredit.
+## Features
 
-### 2. Aktifkan login
-1. Menu **Build → Authentication → Get started**.
-2. Tab **Sign-in method**: aktifkan **Google** dan **Email/Password**.
+- **Configurable drills:** mix any of the four operations and set X and Y from 1 to 5 digits each.
+- **Clean problems:** subtraction never goes negative, and division always gives a whole number.
+- **Two session modes:** practice a set number of problems or race against the clock.
+- **Quick answering:** a correct answer moves on automatically, and a wrong one clears so you can retry the same problem.
+- **Honest accuracy:** only first-try answers count as correct.
+- **Flexible input:** use the on-screen keypad, a physical keyboard, or your phone's number keyboard.
+- **Progress history:** review daily stats, a 14-day chart, and recent sessions.
+- **Sign-in options:** log in with Google or with email and password.
+- **Offline support:** keep practicing without a connection, and results sync once you're back online.
+- **Two languages:** switch between English and Indonesian at any time.
 
-### 3. Buat database
-1. Menu **Build → Firestore Database → Create database**.
-2. Pilih lokasi **asia-southeast2 (Jakarta)**, mode **production**.
+## Tech stack
 
-### 4. Daftarkan web app
-1. **Project settings** (ikon gerigi) → **Your apps** → ikon `</>`.
-2. Salin nilai `firebaseConfig`.
-3. Di folder proyek: salin `.env.example` jadi `.env`, lalu isi nilainya.
+- [React 18](https://react.dev) and [Vite 5](https://vite.dev)
+- [Firebase](https://firebase.google.com) Authentication, Cloud Firestore, and Hosting
+- [vite-plugin-pwa](https://vite-pwa-org.netlify.app) for installation and offline support
+- GitHub Actions for tests, preview deployments, and production deployment
 
-### 5. Jalankan di laptop
+## Getting started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org) 22 (the version used in CI)
+- A [Firebase](https://console.firebase.google.com) project (the free Spark plan is enough)
+- [Firebase CLI](https://firebase.google.com/docs/cli), for deploying: `npm install -g firebase-tools`
+
+### 1. Set up Firebase
+
+In the [Firebase console](https://console.firebase.google.com):
+
+1. Create a project.
+2. Go to **Authentication > Sign-in method** and enable **Google** and **Email/Password**.
+3. Go to **Firestore Database** and create a database in **production mode**, in a region close to your users.
+4. Go to **Project settings > Your apps** and register a web app. Keep its config values for the next step.
+
+### 2. Run the app locally
+
 ```bash
+git clone https://github.com/ghozif/Math-Drill.git
+cd Math-Drill
 npm install
-npm test        # cek generator soal
-npm run dev     # buka http://localhost:5173
+cp .env.example .env    # then fill in your Firebase config values
+npm run dev
 ```
 
-### 6. Deploy ke Firebase Hosting (gratis)
+The app runs at <http://localhost:5173>.
+
+## Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm test` | Test the problem generator and check that translations are complete |
+| `npm run build` | Build for production into `dist/` |
+| `npm run preview` | Serve the production build locally |
+
+## Deployment
+
+### Manual
+
 ```bash
-npm install -g firebase-tools
 firebase login
-firebase use --add            # pilih project yang tadi dibuat
+firebase use --add      # select your Firebase project
 npm run build
-firebase deploy               # upload aturan Firestore + website
+firebase deploy         # deploys Hosting and the Firestore security rules
 ```
-Alamatnya: `https://<project-id>.web.app`. Domain ini otomatis diizinkan untuk login Google.
-Kalau nanti pakai domain lain (mis. Vercel), tambahkan di **Authentication → Settings → Authorized domains**.
 
-### 7. Pasang di HP
-- **iPhone (Safari)**: buka alamatnya → tombol Share → **Add to Home Screen**.
-- **Android (Chrome)**: menu ⋮ → **Install app** / **Add to Home screen**.
+To deploy only the website, run `firebase deploy --only hosting`.
 
-## Catatan
-- Setting latihan disimpan per perangkat (localStorage); riwayat disimpan di Firestore per akun.
-- Yang disimpan per sesi hanya ringkasan (bukan tiap soal) supaya hemat kuota gratis.
-- Saat offline, latihan tetap jalan; riwayat terkirim otomatis begitu online lagi.
+### Automatic
+
+| Workflow | Trigger | Result |
+| --- | --- | --- |
+| [`deploy.yml`](.github/workflows/deploy.yml) | Push to `main` | Tests, builds, and deploys to production |
+| [`firebase-hosting-pull-request.yml`](.github/workflows/firebase-hosting-pull-request.yml) | Pull request from this repository | Tests, builds, and publishes a temporary preview |
+
+If you fork this project, add the following under **Settings > Secrets and variables > Actions** in your repository:
+
+- **Variables:** the six `VITE_FIREBASE_*` values from `.env.example`
+- **Secret:** `FIREBASE_SERVICE_ACCOUNT_MATH_DRILL_B19A9`, containing a Firebase service account key. `firebase init hosting:github` can create one for you, but it names the secret after your project ID, so update the workflow files to match. Also replace the hardcoded `projectId` in `firebase-hosting-pull-request.yml`.
+
+These workflows deploy Hosting only. If you change `firestore.rules`, deploy it with `firebase deploy --only firestore:rules`.
+
+## Project structure
+
+```text
+src/
+├── App.jsx            # Auth state and screen navigation
+├── firebase.js        # Firebase initialization
+├── components/        # Screens and shared UI, including the i18n provider
+└── lib/
+    ├── generator.js   # Problem generation rules
+    ├── i18n.js        # Translations and locale-aware formatting
+    ├── sessions.js    # Firestore reads and writes
+    ├── settings.js    # Practice settings stored in localStorage
+    └── stats.js       # Session summaries and daily grouping
+tests/                 # Generator and translation tests
+firestore.rules        # Firestore security rules
+```
+
+## Adding a language
+
+1. Add the language to `LANGUAGES` in [`src/lib/i18n.js`](src/lib/i18n.js), with its display name and locale.
+2. Add a matching block to `MESSAGES`, with every key translated.
+3. Run `npm test`. It fails if a key or placeholder is missing.
+
+The language switch picks up the new language automatically.
+
+## Data and security
+
+- Each session stores only a summary, not every problem, to stay within Firestore's free quota.
+- Practice settings and the language choice stay in the browser, on each device.
+- [Firestore rules](firestore.rules) only let signed-in users read, add, and delete their own sessions.
+- The `VITE_FIREBASE_*` values are included in the public web build, as is normal for Firebase web apps. Access to data is enforced by Authentication and the Firestore rules, so never put a service account key in `.env` or any `VITE_` variable.
