@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useI18n } from './I18nProvider';
 import LanguageSwitch from './LanguageSwitch';
+import ThemeSwitch from './ThemeSwitch';
 
 export default function Menu({ email, onSignOut }) {
   const { t } = useI18n();
@@ -52,6 +53,11 @@ export default function Menu({ email, onSignOut }) {
           <section>
             <h2 className="sidebar-label">{t('language.title')}</h2>
             <LanguageSwitch />
+          </section>
+
+          <section>
+            <h2 className="sidebar-label">{t('theme.title')}</h2>
+            <ThemeSwitch />
           </section>
 
           <button type="button" className="btn signout" onClick={signOut}>

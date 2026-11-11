@@ -19,27 +19,39 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1211;
-    --surface: #181c1a;
-    --text: #e7ebe9;
-    --muted: #98a19c;
-    --border: #2a312e;
-    --accent: #2dd4bf;
-    --accent-ink: #062320;
-    --accent-soft: #143733;
-    --good: #4ade80;
-    --bad: #f87171;
-    --grid: #262c29;
-    --axis: #3a423e;
-    --series-add: #3987e5;
-    --series-sub: #d95926;
-    --series-mul: #199e70;
-    --series-div: #c98500;
-    color-scheme: dark;
-  }
+/* Mode gelap dipasang lewat data-theme (lihat src/lib/theme.js), termasuk saat mengikuti setelan HP. */
+:root[data-theme='dark'] {
+  --bg: #0f1211;
+  --surface: #181c1a;
+  --text: #e7ebe9;
+  --muted: #98a19c;
+  --border: #2a312e;
+  --accent: #2dd4bf;
+  --accent-ink: #062320;
+  --accent-soft: #143733;
+  --good: #4ade80;
+  --bad: #f87171;
+  --grid: #262c29;
+  --axis: #3a423e;
+  --series-add: #3987e5;
+  --series-sub: #d95926;
+  --series-mul: #199e70;
+  --series-div: #c98500;
+  color-scheme: dark;
 }
+
+/* Warna aksen per tema. Selector [data-accent] juga dipakai tombol contoh warna di sidebar. */
+[data-accent='teal'] { --accent: #0f766e; --accent-ink: #ffffff; --accent-soft: #d6eeea; }
+[data-accent='blue'] { --accent: #1d4ed8; --accent-ink: #ffffff; --accent-soft: #dde7fd; }
+[data-accent='violet'] { --accent: #6d28d9; --accent-ink: #ffffff; --accent-soft: #ebe3fb; }
+[data-accent='rose'] { --accent: #be185d; --accent-ink: #ffffff; --accent-soft: #fbe1ec; }
+[data-accent='amber'] { --accent: #b45309; --accent-ink: #ffffff; --accent-soft: #fbead5; }
+
+[data-theme='dark'][data-accent='teal'], [data-theme='dark'] [data-accent='teal'] { --accent: #2dd4bf; --accent-ink: #062320; --accent-soft: #143733; }
+[data-theme='dark'][data-accent='blue'], [data-theme='dark'] [data-accent='blue'] { --accent: #60a5fa; --accent-ink: #0b1a33; --accent-soft: #172741; }
+[data-theme='dark'][data-accent='violet'], [data-theme='dark'] [data-accent='violet'] { --accent: #a78bfa; --accent-ink: #1c1033; --accent-soft: #261d3f; }
+[data-theme='dark'][data-accent='rose'], [data-theme='dark'] [data-accent='rose'] { --accent: #f472b6; --accent-ink: #330b1f; --accent-soft: #3a1a2b; }
+[data-theme='dark'][data-accent='amber'], [data-theme='dark'] [data-accent='amber'] { --accent: #fbbf24; --accent-ink: #2b1a03; --accent-soft: #392b10; }
 
 * { box-sizing: border-box; }
 
@@ -152,6 +164,15 @@ body:has(.sidebar[open]) { overflow: hidden; }
 .segmented button { border: none; background: none; padding: 9px; border-radius: 9px; cursor: pointer; color: var(--muted); }
 .segmented button.on { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 0.1); }
 .language-switch { margin-bottom: 0; }
+.segmented-3 { grid-template-columns: repeat(3, 1fr); margin-bottom: 0; }
+
+.swatches { display: flex; gap: 10px; margin-bottom: 12px; }
+.swatch {
+  width: 36px; height: 36px; flex: none; border-radius: 50%; cursor: pointer; padding: 0;
+  background: var(--accent); border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--border);
+}
+.swatch[aria-checked='true'] { box-shadow: 0 0 0 2px var(--text); }
+.swatch:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
 .login .language-switch { margin-top: 18px; }
 
 input[type='number'], input[type='email'], input[type='password'] {
