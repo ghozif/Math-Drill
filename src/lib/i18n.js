@@ -88,6 +88,15 @@ export const MESSAGES = {
     'history.perDay': 'Per hari',
     'history.recent': 'Sesi terakhir',
     'history.digits': '{x}×{y} digit',
+    'history.trend': 'Tren per operasi',
+    'history.speed': 'Kecepatan (rata-rata per soal)',
+    'history.speedNote': 'Makin rendah makin cepat. Ketuk grafik untuk melihat angkanya.',
+    'history.accuracyTrend': 'Akurasi (benar di percobaan pertama)',
+    'history.noTrend': 'Belum ada latihan dalam 14 hari terakhir.',
+
+    'chart.timePerProblem': 'Waktu per soal',
+    'chart.problemN': 'Soal {n}',
+    'chart.missed': 'Salah di percobaan pertama',
 
     'login.tagline': 'Latihan hitung cepat: +, −, ×, ÷',
     'login.google': 'Masuk dengan Google',
@@ -194,6 +203,15 @@ export const MESSAGES = {
     'history.perDay': 'By day',
     'history.recent': 'Recent sessions',
     'history.digits': '{x}×{y}-digit',
+    'history.trend': 'Trend by operation',
+    'history.speed': 'Speed (average per problem)',
+    'history.speedNote': 'Lower is faster. Tap the chart to see the numbers.',
+    'history.accuracyTrend': 'Accuracy (correct on the first try)',
+    'history.noTrend': 'No practice in the last 14 days.',
+
+    'chart.timePerProblem': 'Time per problem',
+    'chart.problemN': 'Problem {n}',
+    'chart.missed': 'Wrong on the first try',
 
     'login.tagline': 'Fast arithmetic practice: +, −, ×, ÷',
     'login.google': 'Log in with Google',

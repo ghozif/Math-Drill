@@ -1,6 +1,7 @@
-import { OPS } from '../lib/generator';
+import { OPS, OP_KEYS } from '../lib/generator';
 import { formatClock, formatPct } from '../lib/stats';
 import { useI18n } from './I18nProvider';
+import LineChart from './LineChart';
 
 const SAVE_TEXT = {
   saving: 'result.saving',
@@ -12,6 +13,15 @@ export default function Result({ result, onAgain, onHome }) {
   const { t, formatSec } = useI18n();
   const { summary, records, durationMs, saveState } = result;
   const missed = records.filter((r) => !r.firstTry);
+
+  // Satu garis per operasi; titik operasi lain di sela-selanya dilompati (connectNulls).
+  const timeSeries = OP_KEYS.filter((op) => summary.perOp[op]).map((op) => ({
+    key: op,
+    label: t(`ops.${op}`),
+    symbol: OPS[op].symbol,
+    color: `var(--series-${op})`,
+    points: records.map((r) => (r.op === op ? { v: r.timeMs, hollow: !r.firstTry } : null)),
+  }));
 
   return (
     <div className="container">
@@ -37,6 +47,20 @@ export default function Result({ result, onAgain, onHome }) {
           </div>
         </div>
         <p className={`small ${saveState === 'error' ? 'error' : 'muted'}`}>{t(SAVE_TEXT[saveState])}</p>
+      </section>
+
+      <section className="card">
+        <h2>{t('chart.timePerProblem')}</h2>
+        <LineChart
+          series={timeSeries}
+          xLabels={records.map((r, i) => `${t('chart.problemN', { n: i + 1 })} · ${r.x} ${OPS[r.op].symbol} ${r.y}`)}
+          xTick={(i) => String(i + 1)}
+          formatY={formatSec}
+          minTop={1000}
+          connectNulls
+          label={t('chart.timePerProblem')}
+          missedLabel={t('chart.missed')}
+        />
       </section>
 
       {Object.keys(summary.perOp).length > 1 && (
