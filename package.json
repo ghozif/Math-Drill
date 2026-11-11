@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node tests/generator.test.js && node tests/i18n.test.js && node tests/stats.test.js && node tests/theme.test.js"
+    "test": "node tests/generator.test.js && node tests/i18n.test.js && node tests/stats.test.js && node tests/theme.test.js && node tests/streak.test.js"
   },
   "dependencies": {
     "firebase": "^11.0.0",

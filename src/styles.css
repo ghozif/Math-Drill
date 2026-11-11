@@ -16,6 +16,7 @@
   --series-sub: #eb6834;
   --series-mul: #1baf7a;
   --series-div: #eda100;
+  --streak: #ea580c;
   color-scheme: light;
 }
 
@@ -37,6 +38,7 @@
   --series-sub: #d95926;
   --series-mul: #199e70;
   --series-div: #c98500;
+  --streak: #fb923c;
   color-scheme: dark;
 }
 
@@ -88,6 +90,23 @@ header.top {
   color: var(--muted); cursor: pointer;
 }
 .nav button.active { background: var(--accent-soft); color: var(--text); font-weight: 600; }
+
+/* Api abu-abu sampai latihan hari ini selesai, lalu menyala. */
+.streak {
+  display: inline-flex; align-items: center; gap: 2px; flex: none;
+  padding: 4px 6px; font-weight: 700; font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.streak svg { display: block; }
+.streak-n { color: var(--text); }
+.streak.is-lit { color: var(--streak); }
+
+/* Di HP sempit nama aplikasi disembunyikan (tetap ada di sidebar) supaya tab, streak, dan menu muat satu baris. */
+header.top .brand { white-space: nowrap; }
+@media (max-width: 419px) {
+  header.top .brand { display: none; }
+  header.top .nav { margin-right: auto; }
+}
 
 .menu-btn {
   display: grid; place-items: center; flex: none; width: 40px; height: 40px;
