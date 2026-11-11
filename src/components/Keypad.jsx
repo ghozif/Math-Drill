@@ -1,5 +1,3 @@
-// Keypad angka di layar. Pakai onPointerDown (bukan onClick) supaya
-// respon lebih cepat di HP dan tidak memicu zoom saat ketuk dua kali.
 import { useI18n } from './I18nProvider';
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', '⌫'];

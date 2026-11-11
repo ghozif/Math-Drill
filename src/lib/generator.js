@@ -1,9 +1,3 @@
-// Generator soal hitung.
-// Aturan:
-// - Penjumlahan & perkalian: X dan Y diacak sesuai jumlah digit.
-// - Pengurangan: hasil tidak pernah negatif (X >= Y).
-// - Pembagian: hasil selalu bulat (X dibuat dari Y × hasil).
-
 export const OPS = {
   add: { symbol: '+' },
   sub: { symbol: '−' },
@@ -14,8 +8,6 @@ export const OPS = {
 export const OP_KEYS = Object.keys(OPS);
 export const MAX_DIGITS = 5;
 
-// 1 digit -> 1..9 (0 tidak dipakai supaya soal tidak terlalu remeh)
-// n digit -> 10^(n-1) .. 10^n - 1
 export function digitRange(n) {
   return n <= 1 ? [1, 9] : [10 ** (n - 1), 10 ** n - 1];
 }
@@ -24,7 +16,6 @@ function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Mengembalikan kunci pesan di lib/i18n.js, bukan teks jadi.
 export function validateSettings(s) {
   const errors = [];
   if (!s.ops || s.ops.length === 0) errors.push('errors.noOps');
@@ -41,13 +32,12 @@ function makeAdd(rx, ry) {
 }
 
 function makeSub(rx, ry) {
-  // Coba cari pasangan dengan X >= Y tanpa mengubah jumlah digit.
   for (let i = 0; i < 30; i++) {
     const x = randInt(...rx);
     const y = randInt(...ry);
     if (x >= y) return { x, y, answer: x - y };
   }
-  // Kalau X lebih pendek dari Y (mis. 1 digit − 2 digit), tukar posisinya.
+
   const a = randInt(...rx);
   const b = randInt(...ry);
   const x = Math.max(a, b);
@@ -62,8 +52,6 @@ function makeMul(rx, ry) {
 }
 
 function makeDiv(rx, ry) {
-  // Mulai dari pembagi (Y) dan hasil (Q), lalu X = Y × Q.
-  // Utamakan Y >= 2 dan Q >= 2 supaya tidak ada soal "÷ 1" atau "= 1".
   for (const minVal of [2, 1]) {
     for (let i = 0; i < 60; i++) {
       const yMin = Math.max(minVal, ry[0]);
@@ -77,7 +65,7 @@ function makeDiv(rx, ry) {
       }
     }
   }
-  return null; // kombinasi digit tidak memungkinkan
+  return null;
 }
 
 const makers = { add: makeAdd, sub: makeSub, mul: makeMul, div: makeDiv };
@@ -91,7 +79,6 @@ export function generateProblem(settings, prev) {
     const op = ops[randInt(0, ops.length - 1)];
     const p = makers[op](rx, ry);
     if (!p) continue;
-    // Hindari soal yang persis sama dengan soal sebelumnya.
     if (prev && prev.op === op && prev.x === p.x && prev.y === p.y) continue;
     return { op, ...p };
   }

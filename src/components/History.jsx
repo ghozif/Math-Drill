@@ -25,7 +25,6 @@ export default function History({ uid }) {
 
   const days = useMemo(() => groupByDay(state.sessions), [state.sessions]);
 
-  // 14 hari terakhir (termasuk hari tanpa latihan) untuk grafik.
   const chart = useMemo(() => {
     const byDate = Object.fromEntries(days.map((d) => [d.date, d]));
     const out = [];

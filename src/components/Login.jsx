@@ -12,14 +12,12 @@ import LanguageSwitch from './LanguageSwitch';
 
 export default function Login() {
   const { lang, t, has } = useI18n();
-  const [mode, setMode] = useState('login'); // 'login' | 'register'
+  const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // Simpan kode, bukan teks, supaya pesan ikut berganti saat bahasa diganti.
-  const [msg, setMsg] = useState(null); // { type: 'error', code } | { type: 'info', key }
+  const [msg, setMsg] = useState(null);
   const [busy, setBusy] = useState(false);
 
-  // Bahasa halaman login Google dan email reset password dari Firebase.
   useEffect(() => {
     auth.languageCode = lang;
   }, [lang]);
@@ -35,7 +33,6 @@ export default function Login() {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (e) {
-      // Popup diblokir (sering di Safari/PWA iOS) -> pakai redirect.
       if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment') {
         await signInWithRedirect(auth, googleProvider);
       } else if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {

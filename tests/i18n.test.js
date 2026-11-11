@@ -1,4 +1,3 @@
-// Uji kelengkapan terjemahan: node tests/i18n.test.js
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -7,7 +6,6 @@ import { LANGUAGES, MESSAGES, createI18n } from '../src/lib/i18n.js';
 
 const placeholders = (m) => (typeof m === 'string' ? [...m.matchAll(/\{(\w+)\}/g)].map((x) => x[1]).sort() : null);
 
-// Setiap bahasa punya kunci dan placeholder yang sama.
 const langs = Object.keys(LANGUAGES);
 const keys = Object.keys(MESSAGES.id).sort();
 for (const lang of langs) {
@@ -19,7 +17,6 @@ for (const lang of langs) {
   }
 }
 
-// Setiap kunci yang dipakai kode harus ada di kamus.
 const srcFiles = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? srcFiles(join(dir, e.name)) : /\.jsx?$/.test(e.name) ? [join(dir, e.name)] : [],
@@ -47,7 +44,6 @@ for (const key of [
   assert.ok(keys.includes(key), `${key} tidak ada`);
 }
 
-// Format dan bentuk jamak.
 const id = createI18n('id');
 const en = createI18n('en');
 assert.equal(id.formatSec(1500), '1,5 dtk');

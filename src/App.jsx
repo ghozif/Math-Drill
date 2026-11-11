@@ -12,11 +12,11 @@ import { useI18n } from './components/I18nProvider';
 
 export default function App() {
   const { t } = useI18n();
-  const [user, setUser] = useState(undefined); // undefined = masih cek status login
-  const [screen, setScreen] = useState('home'); // home | drill | result | history
+  const [user, setUser] = useState(undefined); 
+  const [screen, setScreen] = useState('home');
   const [settings, setSettings] = useState(loadSettings);
   const [result, setResult] = useState(null);
-  const [drillId, setDrillId] = useState(0); // ganti key -> Drill mulai dari nol
+  const [drillId, setDrillId] = useState(0);
 
   useEffect(() => onAuthStateChanged(auth, (u) => setUser(u)), []);
   useEffect(() => saveSettings(settings), [settings]);
@@ -29,7 +29,7 @@ export default function App() {
   const finish = useCallback(
     async (session) => {
       if (!session.summary.total) {
-        setScreen('home'); // berhenti sebelum menjawab satu soal pun
+        setScreen('home');
         return;
       }
       setResult({ ...session, saveState: 'saving' });

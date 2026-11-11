@@ -1,5 +1,3 @@
-// Ringkasan sesi dan pengelompokan riwayat per hari.
-
 export function dateKey(d = new Date()) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -7,7 +5,6 @@ export function dateKey(d = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
-// records: [{ op, x, y, answer, firstTry, wrongAttempts, timeMs }]
 export function summarize(records) {
   const total = records.length;
   let correct = 0;
@@ -36,7 +33,6 @@ export function summarize(records) {
   };
 }
 
-// sessions dari Firestore -> [{ date, sessions, total, correct, totalMs, accuracy, avgMs }]
 export function groupByDay(sessions) {
   const map = new Map();
   for (const s of sessions) {
