@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { OPS, generateProblem } from '../lib/generator';
 import { formatClock, summarize } from '../lib/stats';
+import { useI18n } from './I18nProvider';
 import Keypad from './Keypad';
 
 export default function Drill({ settings, onFinish, onToggleKeypad }) {
+  const { t } = useI18n();
   const [problem, setProblem] = useState(() => generateProblem(settings));
   const [input, setInputState] = useState('');
   const [records, setRecords] = useState([]);
@@ -146,17 +148,17 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
       <div className="drill-top">
         <span className="stat">
           {settings.mode === 'count'
-            ? `Soal ${Math.min(records.length + 1, settings.target)}/${settings.target}`
+            ? t('drill.progress', { current: Math.min(records.length + 1, settings.target), target: settings.target })
             : formatClock(settings.target - elapsedSec)}
         </span>
         <span className="muted small">✓ {correct}</span>
         {settings.mode === 'count' && <span className="muted small">{formatClock(elapsedSec)}</span>}
         <span className="spacer" />
         <button type="button" className="icon-btn" onClick={onToggleKeypad} aria-pressed={settings.keypad}>
-          {settings.keypad ? 'Keypad: on' : 'Keypad: off'}
+          {settings.keypad ? t('drill.keypadOn') : t('drill.keypadOff')}
         </button>
         <button type="button" className="icon-btn" onClick={finish}>
-          Selesai
+          {t('drill.finish')}
         </button>
       </div>
       <div className="progress">
@@ -184,11 +186,11 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
             value={input}
             onChange={(e) => submitRef.current(e.target.value)}
             onKeyDown={(e) => e.key === 'Escape' && finish()}
-            aria-label="Jawaban"
+            aria-label={t('drill.answer')}
           />
         )}
 
-        <div className="hint">{wrongNow > 0 ? `Salah ${wrongNow}×, coba lagi` : ' '}</div>
+        <div className="hint">{wrongNow > 0 ? t('drill.wrongHint', { n: wrongNow }) : ' '}</div>
       </div>
 
       {settings.keypad && (
