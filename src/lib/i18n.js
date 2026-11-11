@@ -13,6 +13,9 @@ export const MESSAGES = {
     'nav.practice': 'Latihan',
     'nav.history': 'Riwayat',
     'nav.signOut': 'Keluar',
+    'menu.open': 'Buka menu',
+    'menu.close': 'Tutup menu',
+    'menu.signedInAs': 'Masuk sebagai',
     'language.title': 'Bahasa',
 
     'ops.add': 'Penjumlahan',
@@ -70,7 +73,7 @@ export const MESSAGES = {
     'result.perOperation': 'Per operasi',
     'result.missed': 'Soal yang sempat salah',
     'result.wrongCount': 'salah {n}×',
-    'result.changeSettings': 'Ubah setting',
+    'result.back': 'Kembali',
     'result.again': 'Ulangi',
 
     'history.loading': 'Memuat riwayat…',
@@ -116,6 +119,9 @@ export const MESSAGES = {
     'nav.practice': 'Practice',
     'nav.history': 'History',
     'nav.signOut': 'Log out',
+    'menu.open': 'Open menu',
+    'menu.close': 'Close menu',
+    'menu.signedInAs': 'Signed in as',
     'language.title': 'Language',
 
     'ops.add': 'Addition',
@@ -173,7 +179,7 @@ export const MESSAGES = {
     'result.perOperation': 'By operation',
     'result.missed': 'Problems you got wrong at first',
     'result.wrongCount': 'wrong {n}×',
-    'result.changeSettings': 'Change settings',
+    'result.back': 'Back',
     'result.again': 'Go again',
 
     'history.loading': 'Loading history…',

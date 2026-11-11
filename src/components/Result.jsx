@@ -83,7 +83,7 @@ export default function Result({ result, onAgain, onHome }) {
 
       <div className="btn-row">
         <button type="button" className="btn secondary" onClick={onHome}>
-          {t('result.changeSettings')}
+          {t('result.back')}
         </button>
         <button type="button" className="btn" onClick={onAgain}>
           {t('result.again')}

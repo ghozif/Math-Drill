@@ -65,6 +65,40 @@ header.top {
 }
 .nav button.active { background: var(--accent-soft); color: var(--text); font-weight: 600; }
 
+.menu-btn {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px;
+  border: none; border-radius: 10px; background: none; color: var(--text); cursor: pointer;
+}
+@media (hover: hover) {
+  .menu-btn:hover { background: var(--accent-soft); }
+}
+.menu-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+header.top .menu-btn { margin-right: -8px; }
+
+.sidebar {
+  inset: 0 0 0 auto; margin: 0; padding: 0;
+  width: min(300px, 85vw); height: 100dvh; max-width: none; max-height: none;
+  border: none; border-left: 1px solid var(--border);
+  background: var(--surface); color: var(--text);
+}
+.sidebar[open] { animation: slide-in 0.2s ease-out; }
+.sidebar::backdrop { background: rgb(0 0 0 / 0.45); }
+@keyframes slide-in { from { transform: translateX(100%); } }
+body:has(.sidebar[open]) { overflow: hidden; }
+
+.sidebar-inner {
+  display: flex; flex-direction: column; gap: 20px; height: 100%;
+  padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+}
+.sidebar-head { display: flex; align-items: center; justify-content: space-between; }
+.sidebar-head .menu-btn { margin-right: -8px; }
+.sidebar-account { margin: 0; overflow-wrap: anywhere; }
+.sidebar-label {
+  font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--muted); margin: 0 0 10px; font-weight: 600;
+}
+.btn.signout { margin-top: auto; background: var(--surface); color: var(--bad); border-color: var(--border); }
+
 /* ---------- Kartu & kontrol ---------- */
 .card {
   background: var(--surface); border: 1px solid var(--border);
@@ -221,4 +255,5 @@ tr:last-child td { border-bottom: none; }
 @media (prefers-reduced-motion: reduce) {
   .stage.wrong .answer { animation: none; }
   .progress div { transition: none; }
+  .sidebar[open] { animation: none; }
 }
