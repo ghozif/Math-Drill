@@ -2,8 +2,6 @@ import { addDoc, collection, getDocs, limit, orderBy, query, serverTimestamp } f
 import { db } from '../firebase';
 import { dateKey } from './stats';
 
-// Struktur data: users/{uid}/sessions/{sessionId}
-// Yang disimpan hanya ringkasan (bukan setiap soal) supaya hemat kuota baca/tulis.
 export async function saveSession(uid, { settings, summary, durationMs, startedAt }) {
   return addDoc(collection(db, 'users', uid, 'sessions'), {
     ops: settings.ops,

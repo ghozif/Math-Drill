@@ -33,14 +33,12 @@ export default function Home({ settings, setSettings, onStart }) {
     if (mode !== settings.mode) update({ mode, target: mode === 'time' ? 60 : 20 });
   };
 
-  // Contoh soal, berubah setiap setting operasi/digit berubah.
   const samples = useMemo(() => {
     if (errors.length) return [];
     const list = [];
     let prev;
     for (let i = 0; i < 3; i++) list.push((prev = generateProblem(settings, prev)));
     return list;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.ops.join(), settings.digitsX, settings.digitsY, errors.length]);
 
   return (

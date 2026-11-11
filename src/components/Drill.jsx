@@ -9,8 +9,8 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
   const [problem, setProblem] = useState(() => generateProblem(settings));
   const [input, setInputState] = useState('');
   const [records, setRecords] = useState([]);
-  const [wrongNow, setWrongNow] = useState(0); // salah berapa kali di soal ini
-  const [flash, setFlash] = useState(null); // 'right' | 'wrong' | null
+  const [wrongNow, setWrongNow] = useState(0);
+  const [flash, setFlash] = useState(null);
   const [now, setNow] = useState(() => Date.now());
 
   const startRef = useRef(Date.now());
@@ -21,7 +21,6 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
   const flashTimer = useRef(null);
   const fieldRef = useRef(null);
 
-  // Simpan input di state (untuk tampilan) dan di ref (untuk event yang datang beruntun).
   const setInput = (v) => {
     inputRef.current = v;
     setInputState(v);
@@ -46,7 +45,6 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
     });
   }, [settings, onFinish]);
 
-  // Jam: update 4x per detik untuk timer & progress bar.
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 250);
     return () => clearInterval(id);
@@ -54,7 +52,6 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
 
   const elapsedSec = (now - startRef.current) / 1000;
 
-  // Mode waktu: selesai otomatis saat waktu habis.
   useEffect(() => {
     if (settings.mode === 'time' && elapsedSec >= settings.target) finish();
   }, [elapsedSec, settings.mode, settings.target, finish]);
@@ -65,10 +62,6 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
     flashTimer.current = setTimeout(() => setFlash(null), kind === 'wrong' ? 400 : 160);
   };
 
-  // Inti logika jawaban:
-  // - sama persis dengan jawaban  -> benar, catat, lanjut soal berikut
-  // - jumlah digit sudah >= jawaban tapi beda -> salah, kosongkan, ulang soal yang sama
-  // - selain itu -> tunggu digit berikutnya
   const submitValue = (raw) => {
     if (finishedRef.current) return;
     const next = raw.replace(/\D/g, '');
@@ -107,13 +100,11 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
     }
   };
 
-  // Ref ke handler terbaru supaya listener keyboard tidak memakai data basi.
   const submitRef = useRef(submitValue);
   submitRef.current = submitValue;
   const finishRef = useRef(finish);
   finishRef.current = finish;
 
-  // Keyboard fisik (laptop) saat keypad layar aktif.
   useEffect(() => {
     if (!settings.keypad) return;
     const onKey = (e) => {
@@ -132,7 +123,6 @@ export default function Drill({ settings, onFinish, onToggleKeypad }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [settings.keypad]);
 
-  // Saat keypad dimatikan, fokus ke input supaya keyboard angka bawaan HP muncul.
   useEffect(() => {
     if (!settings.keypad) fieldRef.current?.focus();
   }, [settings.keypad, problem]);

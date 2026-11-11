@@ -6,7 +6,6 @@ import {
   persistentMultipleTabManager,
 } from 'firebase/firestore';
 
-// Nilai diambil dari file .env (lihat .env.example).
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -20,7 +19,6 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-// Cache lokal: hasil sesi yang disimpan saat offline akan terkirim otomatis begitu online.
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });

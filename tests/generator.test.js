@@ -1,4 +1,3 @@
-// Uji cepat generator: node tests/generator.test.js
 import assert from 'node:assert/strict';
 import { digitRange, generateProblem, validateSettings } from '../src/lib/generator.js';
 
@@ -23,7 +22,6 @@ for (const op of ['add', 'sub', 'mul', 'div']) {
         if (op === 'sub') assert.equal(p.answer, p.x - p.y);
         if (op === 'mul') assert.equal(p.answer, p.x * p.y);
         if (op === 'div') assert.equal(p.x, p.y * p.answer);
-        // Jumlah digit harus sesuai setting (kecuali pengurangan yang ditukar karena X < Y)
         if (!(op === 'sub' && dx < dy)) {
           assert.ok(p.x >= xMin && p.x <= xMax, `X keluar rentang: ${JSON.stringify(p)} (${dx} digit)`);
           assert.ok(p.y >= yMin && p.y <= yMax, `Y keluar rentang: ${JSON.stringify(p)} (${dy} digit)`);

@@ -5,14 +5,12 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   build: {
     rollupOptions: {
-      // Pisahkan library Firebase ke file sendiri supaya cache browser lebih awet.
       output: { manualChunks: { firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'] } },
     },
     chunkSizeWarningLimit: 700,
   },
   plugins: [
     react(),
-    // PWA: bisa "Add to Home Screen" di iPhone/Android dan tetap jalan saat offline.
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
@@ -32,7 +30,6 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Jangan cache halaman login Firebase (/__/auth/...) sebagai fallback SPA.
         navigateFallbackDenylist: [/^\/__\//],
       },
     }),

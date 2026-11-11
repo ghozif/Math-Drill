@@ -1,6 +1,3 @@
-// Kamus bahasa dan fungsi penerjemah. Tanpa React supaya bisa diuji langsung dengan Node.
-// Nilai pesan: string dengan {placeholder}, atau fungsi kalau butuh bentuk jamak.
-
 const KEY = 'drill-hitung:lang';
 
 export const DEFAULT_LANG = 'id';
@@ -232,7 +229,6 @@ export function createI18n(lang) {
     t,
     has: (key) => key in MESSAGES[lang],
     formatSec: (ms) => t('units.sec', { n: (ms / 1000).toLocaleString(locale, { maximumFractionDigits: 1 }) }),
-    // key berformat YYYY-MM-DD, lihat dateKey() di stats.js
     formatDateLabel: (key) => {
       const [y, m, d] = key.split('-').map(Number);
       return new Date(y, m - 1, d).toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' });
@@ -242,7 +238,6 @@ export function createI18n(lang) {
   };
 }
 
-// Pilihan bahasa disimpan di browser saja (per perangkat), sama seperti setting latihan.
 export function loadLang() {
   try {
     const saved = localStorage.getItem(KEY);
