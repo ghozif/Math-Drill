@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { OPS } from '../lib/generator';
+import { OPS, OP_KEYS } from '../lib/generator';
 import { loadSessions } from '../lib/sessions';
-import { dateKey, formatPct, groupByDay } from '../lib/stats';
+import { dateKey, formatPct, groupByDay, groupByDayOp } from '../lib/stats';
 import { useI18n } from './I18nProvider';
+import LineChart from './LineChart';
 
 const DAYS_IN_CHART = 14;
 
@@ -36,6 +37,25 @@ export default function History({ uid }) {
     }
     return out;
   }, [days]);
+
+  const byDayOp = useMemo(() => groupByDayOp(state.sessions), [state.sessions]);
+
+  // Kecepatan dan akurasi beda satuan, jadi dua chart terpisah (bukan dua sumbu Y).
+  const trendSeries = (valueOf) =>
+    OP_KEYS.filter((op) => chart.some((c) => byDayOp[c.key]?.[op]?.total)).map((op) => ({
+      key: op,
+      label: t(`ops.${op}`),
+      symbol: OPS[op].symbol,
+      color: `var(--series-${op})`,
+      points: chart.map((c) => {
+        const a = byDayOp[c.key]?.[op];
+        return a?.total ? { v: valueOf(a) } : null;
+      }),
+    }));
+  const speedSeries = trendSeries((a) => a.totalMs / a.total);
+  const accuracySeries = trendSeries((a) => a.correct / a.total);
+  const trendLabels = chart.map((c) => formatDateLabel(c.key));
+  const dayTick = (i) => String(chart[i].day);
 
   if (state.status === 'loading') return <div className="container muted">{t('history.loading')}</div>;
   if (state.status === 'error') return <div className="container error">{t('history.error')}</div>;
@@ -87,6 +107,37 @@ export default function History({ uid }) {
           ))}
         </div>
         <p className="muted small">{t('history.chartNote')}</p>
+      </section>
+
+      <section className="card">
+        <h2>{t('history.trend')}</h2>
+        {speedSeries.length ? (
+          <>
+            <h3 className="chart-title">{t('history.speed')}</h3>
+            <LineChart
+              series={speedSeries}
+              xLabels={trendLabels}
+              xTick={dayTick}
+              formatY={formatSec}
+              minTop={1000}
+              label={t('history.speed')}
+            />
+            <p className="muted small">{t('history.speedNote')}</p>
+
+            <h3 className="chart-title">{t('history.accuracyTrend')}</h3>
+            <LineChart
+              series={accuracySeries}
+              xLabels={trendLabels}
+              xTick={dayTick}
+              formatY={formatPct}
+              yMax={1}
+              label={t('history.accuracyTrend')}
+              showLegend={false}
+            />
+          </>
+        ) : (
+          <p className="muted">{t('history.noTrend')}</p>
+        )}
       </section>
 
       <section className="card">

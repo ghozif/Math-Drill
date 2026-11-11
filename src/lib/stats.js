@@ -52,6 +52,20 @@ export function groupByDay(sessions) {
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
+// { 'YYYY-MM-DD': { add: { total, correct, totalMs }, ... } }
+export function groupByDayOp(sessions) {
+  const out = {};
+  for (const s of sessions) {
+    for (const [op, o] of Object.entries(s.perOp ?? {})) {
+      const a = ((out[s.dateKey] ??= {})[op] ??= { total: 0, correct: 0, totalMs: 0 });
+      a.total += o.total ?? 0;
+      a.correct += o.correct ?? 0;
+      a.totalMs += o.totalMs ?? 0;
+    }
+  }
+  return out;
+}
+
 export function formatPct(x) {
   return `${Math.round(x * 100)}%`;
 }
