@@ -8,6 +8,7 @@ import Home from './components/Home';
 import Drill from './components/Drill';
 import Result from './components/Result';
 import History from './components/History';
+import Menu from './components/Menu';
 import { useI18n } from './components/I18nProvider';
 
 export default function App() {
@@ -71,9 +72,7 @@ export default function App() {
             {t('nav.history')}
           </button>
         </nav>
-        <button type="button" className="icon-btn" onClick={() => signOut(auth)} title={user.email ?? ''}>
-          {t('nav.signOut')}
-        </button>
+        <Menu email={user.email} onSignOut={() => signOut(auth)} />
       </header>
 
       {screen === 'home' && <Home settings={settings} setSettings={setSettings} onStart={start} />}
