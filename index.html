@@ -10,6 +10,17 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Math Drill</title>
+    <!-- Pasang tema sebelum halaman tampil supaya tidak berkedip. Logikanya sama dengan src/lib/theme.js. -->
+    <script>
+      (function () {
+        var t = {};
+        try { t = JSON.parse(localStorage.getItem('drill-hitung:theme') || '{}') || {}; } catch (e) {}
+        var mode = t.mode === 'light' || t.mode === 'dark' ? t.mode
+          : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', mode);
+        if (/^(teal|blue|violet|rose|amber)$/.test(t.accent)) document.documentElement.setAttribute('data-accent', t.accent);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
